@@ -1,0 +1,15 @@
+### Environment ###
+.DS_Store
+
+### Backend ###
+venv
+__pycache__
+db.sqlite3
+media/*
+
+### Сode editor ###
+.idea
+.vscode
+
+### Config ###
+.env
