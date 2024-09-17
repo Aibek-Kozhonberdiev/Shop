@@ -7,7 +7,6 @@ User = get_user_model()
 
 
 class UserVieSet(mixins.ListModelMixin,
-                 mixins.CreateModelMixin,
                  mixins.RetrieveModelMixin,
                  mixins.UpdateModelMixin,
                  mixins.DestroyModelMixin,

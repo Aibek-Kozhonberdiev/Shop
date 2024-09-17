@@ -14,7 +14,6 @@ class CustomUser(AbstractUser):
         validators=[
             validation_phone
         ],
-        blank=True
     )
     avatar = models.ImageField(
         null=True,
