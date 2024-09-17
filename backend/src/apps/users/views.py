@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework import mixins, viewsets, permissions
+from rest_framework import mixins, viewsets
 
 from .serializers import SerializerSetUser
 
@@ -15,3 +15,11 @@ class UserVieSet(mixins.ListModelMixin,
     serializer_class = SerializerSetUser
     queryset = User.objects.all()
     pagination_class = None
+
+
+def auth():
+    pass
+
+
+def logout():
+    pass

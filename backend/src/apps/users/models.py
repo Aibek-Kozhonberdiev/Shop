@@ -12,9 +12,9 @@ class CustomUser(AbstractUser):
         verbose_name='Телефонный номер',
         help_text='Введите телефонный номер в международном формате',
         validators=[
-            validation_phone,
-            validate_file_size_avatar
-        ]
+            validation_phone
+        ],
+        blank=True
     )
     avatar = models.ImageField(
         null=True,
@@ -29,7 +29,7 @@ class CustomUser(AbstractUser):
                     'png',
                 ]
             ),
-
+            validate_file_size_avatar
         ]
     )
 

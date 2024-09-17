@@ -11,6 +11,6 @@ def validation_phone(value):
 
 
 def validate_file_size_avatar(file):
-    max_size_kb = 1024
+    max_size_kb = 1024 # 1 MB in KB
     if file.size > max_size_kb:
-        raise ValidationError(f"Размер файла не должен превышать {max_size_kb}KB")
+        raise ValidationError(f"Размер файла не должен превышать {max_size_kb / 1000} MB")
