@@ -13,17 +13,19 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        ('Personal Info', {'fields': ('email', 'phone', 'avatar')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+        ('Личная информация', {'fields': ('email', 'phone', 'avatar')}),
+        ('Статус', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
+        ('Даты', {'fields': ('last_login', 'date_joined')}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', 'phone', 'avatar'),
+            'fields': ('username', 'phone', 'password1', 'password2', 'email', 'avatar'),
         }),
     )
+
+    readonly_fields = ('last_login', 'date_joined')
 
     def avatar_img(self, obj):
         return format_html('<img src="{}" width="100" height="100" />', obj.avatar.url) if obj.avatar else None

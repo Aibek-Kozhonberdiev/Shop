@@ -14,6 +14,7 @@ class CustomUser(AbstractUser):
         validators=[
             validation_phone
         ],
+        unique=True
     )
     avatar = models.ImageField(
         null=True,
@@ -31,6 +32,8 @@ class CustomUser(AbstractUser):
             validate_file_size_avatar
         ]
     )
+
+    REQUIRED_FIELDS = ['phone', 'email']
 
     class Meta:
         app_label = 'users'
