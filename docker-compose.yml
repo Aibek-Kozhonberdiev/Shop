@@ -13,7 +13,6 @@ services:
       - db
     env_file:
       - .env
-      - .env.example
 
   db:
     container_name: db-postgres
