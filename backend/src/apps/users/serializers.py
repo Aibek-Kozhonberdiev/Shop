@@ -5,13 +5,16 @@ User = get_user_model()
 
 
 class SerializerSetUser(serializers.ModelSerializer):
+    avatar = serializers.ImageField(
+        required=False,
+        allow_null=True
+    )
 
     class Meta:
         model = User
         fields = [
             "id",
             "username",
-            "password",
             "email",
             "phone",
             "avatar"

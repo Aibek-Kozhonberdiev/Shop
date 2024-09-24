@@ -1,18 +1,19 @@
-version: '3.0'
 
 services:
   api:
     container_name: api-django
     build: ./backend
     ports:
-      - "8001:8000"
+      - "8000:8000"
     volumes:
       - ./media/:/media
-    entrypoint: ./backend/wsgi-entrypoint.sh
-    command: python manage.py runserver 0.0.0.0:8000
+    entrypoint: /code/wsgi-entrypoint.sh
     restart: always
     depends_on:
       - db
+    env_file:
+      - .env
+      - .env.example
 
   db:
     container_name: db-postgres
@@ -22,11 +23,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=test_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     restart: always
-    env_file: .env
 
   # web:
   #   container_name: web-react

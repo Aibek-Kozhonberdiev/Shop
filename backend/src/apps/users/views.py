@@ -13,7 +13,10 @@ class UserVieSet(mixins.ListModelMixin,
                  viewsets.GenericViewSet):
     serializer_class = SerializerSetUser
     queryset = User.objects.all()
-    pagination_class = None
+
+
+def registration():
+    pass
 
 
 def auth():

@@ -23,6 +23,9 @@ class CustomUser(AbstractUser):
             validation_phone
         ],
         unique=True,
+        error_messages={
+            'unique': _("Пользователь с таким номером телефона уже существует."),
+        }
     )
     avatar = models.ImageField(
         null=True,
