@@ -7,10 +7,4 @@ else
     cp .env.example .env
 fi
 
-if [[ "$(uname)" == "Darwin" ]]; then
-    docker-compose up -d
-elif [[ "$(uname)" == "Linux" ]]; then
-    sudo docker-compose up -d
-else
-    echo "Unsupported OS. Please run docker manually"
-fi
+docker-compose up -d || sudo docker-compose up -d

@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+  db:
+    container_name: db-postgres
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    restart: always
+
   api:
     container_name: api-django
     build: ./backend
@@ -14,19 +27,6 @@ services:
       - db
     env_file:
       - .env
-
-  db:
-    container_name: db-postgres
-    image: postgres:15-alpine
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    restart: always
 
   # web:
   #   container_name: web-react
