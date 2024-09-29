@@ -20,7 +20,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./media/:/media
+      - ./backend/src/media:/media
     entrypoint: /code/wsgi-entrypoint.sh
     restart: always
     depends_on:

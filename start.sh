@@ -7,4 +7,12 @@ else
     cp .env.example .env
 fi
 
-docker-compose up -d || sudo docker-compose up -d
+if [[ $(uname) == "Darwin" ]]; then
+    docker-compose up -d
+else
+    if sudo -v &> /dev/null; then
+        sudo docker-compose up -d
+    else
+        docker-compose up -d
+    fi
+fi
