@@ -9,6 +9,9 @@ class SerializerSetUser(serializers.ModelSerializer):
         required=False,
         allow_null=True
     )
+    is_staff = serializers.BooleanField(
+        read_only=True,
+    )
 
     class Meta:
         model = User
@@ -17,5 +20,6 @@ class SerializerSetUser(serializers.ModelSerializer):
             "username",
             "email",
             "phone",
-            "avatar"
+            "avatar",
+            "is_staff"
         ]

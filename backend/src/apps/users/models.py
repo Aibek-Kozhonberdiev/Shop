@@ -18,7 +18,7 @@ class CustomUser(AbstractUser):
     phone = models.CharField(
         max_length=16,
         verbose_name='Телефонный номер',
-        help_text='Введите телефонный номер в международном формате',
+        help_text='Введите телефонный номер в международном формате (+996)',
         validators=[
             validation_phone
         ],

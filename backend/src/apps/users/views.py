@@ -11,11 +11,11 @@ from .serializers import SerializerSetUser
 User = get_user_model()
 
 
-class UserVieSet(mixins.ListModelMixin,
-                 mixins.RetrieveModelMixin,
-                 mixins.UpdateModelMixin,
-                 mixins.DestroyModelMixin,
-                 viewsets.GenericViewSet):
+class UserView(mixins.ListModelMixin,
+               mixins.RetrieveModelMixin,
+               mixins.UpdateModelMixin,
+               mixins.DestroyModelMixin,
+               viewsets.GenericViewSet):
     serializer_class = SerializerSetUser
     queryset = User.objects.all()
 
@@ -45,10 +45,10 @@ def auth(request):
     try:
         user = User.objects.get(email=email)
     except User.DoesNotExist:
-        return Response({'detail': 'Неверный адрес электронной почты или пароль.'}, status=401)
+        return Response({'detail': 'Incorrect email address or password.'}, status=401)
 
     if not check_password(password, user.password):
-        return Response({'detail': 'Неверный адрес электронной почты или пароль.'}, status=401)
+        return Response({'detail': 'Incorrect email address or password.'}, status=401)
 
     refresh = RefreshToken.for_user(user)
     user_data = {
@@ -65,6 +65,6 @@ def logout_user(request):
     try:
         token = RefreshToken(request.data.get('refresh'))
         token.blacklist()
-        return Response({'detail': 'Успешно вышел из системы.'}, status=205)
+        return Response({'detail': 'Successfully logged out.'}, status=205)
     except TokenError as e:
-        return Response({'detail': 'Токен недействителен.'}, status=400)
+        return Response({'detail': 'The token is invalid.'}, status=400)

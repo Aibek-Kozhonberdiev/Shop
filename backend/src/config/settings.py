@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     # Apss
-    'apps.ratings.apps.RatingsConfig',
     'apps.chats.apps.ChatsConfig',
     'apps.goods.apps.GoodsConfig',
     'apps.shops.apps.ShopsConfig',
