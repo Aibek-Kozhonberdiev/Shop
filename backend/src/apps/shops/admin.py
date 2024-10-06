@@ -9,7 +9,7 @@ class ShopAdmin(admin.ModelAdmin):
     list_display = ('title', 'number_of_complaints', 'ban', 'date_of_created', 'user', 'logo_img', "average_rating")
     search_fields = ('title', 'address', 'indicate_address', 'ban', 'number_of_complaints', 'link', 'date_of_created', 'user__username', "average_rating")
     list_filter = ('ban', 'indicate_address', 'number_of_complaints', 'date_of_created', "average_rating")
-    readonly_fields = ('number_of_complaints', 'date_of_created')
+    readonly_fields = ('number_of_complaints', 'date_of_created', 'average_rating')
 
     def logo_img(self, obj):
         return format_html('<img src="{}" width="50" height="50" />', obj.logo.url) if obj.logo else None

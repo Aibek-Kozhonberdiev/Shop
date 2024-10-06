@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 from rest_framework import serializers
 
 from .models import Shop, Complaint, Rating
@@ -37,8 +38,12 @@ class SerializerShop(serializers.ModelSerializer):
         read_only=True,
         source='rating_set'
     )
-    average_rating = serializers.IntegerField(
-        read_only=True
+    average_rating = serializers.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        validators=[
+            MinValueValidator(1.0)
+        ]
     )
 
     class Meta:

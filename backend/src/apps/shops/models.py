@@ -76,13 +76,13 @@ class Shop(models.Model):
         help_text="Пользователь, создавший магазин"
     )
     average_rating = models.DecimalField(
-        max_digits=3,  # Общее количество цифр (до запятой)
-        decimal_places=2,  # Количество цифр после запятой
-        default=Decimal('0.00'),  # Указываем значение по умолчанию как Decimal
+        max_digits=3,
+        decimal_places=2,
+        default=Decimal('0.00'),
         blank=True,
         validators=[
-            MaxValueValidator(5.0),  # Максимальное значение
-            MinValueValidator(0.0)  # Минимальное значение
+            MaxValueValidator(5.0),
+            MinValueValidator(0.0)
         ],
         verbose_name="Рейтинг",
         help_text="Оценка от 0.00 до 5.00"
