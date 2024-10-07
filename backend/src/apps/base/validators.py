@@ -11,6 +11,24 @@ def validation_phone(value):
 
 
 def validate_file_size_avatar(file):
+    max_size_mb = 0.5
+    if file.size > max_size_mb * 1024 * 1024:
+        raise ValidationError(f"Размер файла не должен превышать {max_size_mb}MB.")
+
+
+def validate_foto_base(file):
     max_size_mb = 3
+    if file.size > max_size_mb * 1024 * 1024:
+        raise ValidationError(f"Размер файла не должен превышать {max_size_mb}MB.")
+
+
+def validate_foto_logo_shop(file):
+    max_size_mb = 1.5
+    if file.size > max_size_mb * 1024 * 1024:
+        raise ValidationError(f"Размер файла не должен превышать {max_size_mb}MB.")
+
+
+def validate_foto_size_product(file):
+    max_size_mb = 2
     if file.size > max_size_mb * 1024 * 1024:
         raise ValidationError(f"Размер файла не должен превышать {max_size_mb}MB.")

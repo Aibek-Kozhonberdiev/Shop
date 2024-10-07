@@ -2,9 +2,10 @@ from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
 
 from ..base.services import path_background_shop, path_logo_shop, path_screenshot_complaint
+from ..base.validators import validate_foto_base, validate_foto_logo_shop
 
 User = get_user_model()
 
@@ -24,11 +25,29 @@ class Shop(models.Model):
     )
     logo = models.ImageField(
         upload_to=path_logo_shop,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=[
+                    'jpg',
+                    'png',
+                ]
+            ),
+            validate_foto_logo_shop
+        ],
         verbose_name="Логотип",
         help_text="Загрузите логотип магазина"
     )
     background = models.ImageField(
         upload_to=path_background_shop,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=[
+                    'jpg',
+                    'png',
+                ]
+            ),
+            validate_foto_base
+        ],
         null=True,
         blank=True,
         verbose_name="Фон",
@@ -88,12 +107,12 @@ class Shop(models.Model):
         help_text="Оценка от 0.00 до 5.00"
     )
 
-    class Meta:
-        verbose_name = "Магазин"
-        verbose_name_plural = "Магазины"
-
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = "магазин"
+        verbose_name_plural = "магазины"
 
 
 class Complaint(models.Model):
@@ -116,6 +135,15 @@ class Complaint(models.Model):
     )
     screenshot = models.ImageField(
         upload_to=path_screenshot_complaint,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=[
+                    'jpg',
+                    'png',
+                ]
+            ),
+            validate_foto_base
+        ],
         null=True,
         blank=True,
         verbose_name="Скриншот",
@@ -133,13 +161,13 @@ class Complaint(models.Model):
         help_text="Дата и время написания жалобы"
     )
 
-    class Meta:
-        verbose_name = "Жалоба"
-        verbose_name_plural = "Жалобы"
-        unique_together = ('user', 'shop')
-
     def __str__(self):
         return self.user.username
+
+    class Meta:
+        verbose_name = "жалобу"
+        verbose_name_plural = "жалобы"
+        unique_together = ('user', 'shop')
 
 
 class Rating(models.Model):
@@ -167,6 +195,7 @@ class Rating(models.Model):
         max_length=150,
         null=True,
         blank=True,
+        verbose_name="Комментарии для магазина"
     )
     date_writing = models.DateTimeField(
         auto_now_add=True,
@@ -179,10 +208,10 @@ class Rating(models.Model):
         help_text="Дата и время последнего обновления отзыва"
     )
 
-    class Meta:
-        verbose_name = "Рейтинг"
-        verbose_name_plural = "Рейтинги"
-        unique_together = ('user', 'shop')
-
     def __str__(self):
         return f"Пользователь: {self.user.username}\nМагазин: {self.shop.title}"
+
+    class Meta:
+        verbose_name = "рейтинг"
+        verbose_name_plural = "рейтинги"
+        unique_together = ('user', 'shop')

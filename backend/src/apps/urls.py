@@ -7,4 +7,7 @@ urlpatterns = [
 
     # Shops and ratings
     path('', include("apps.shops.urls")),
+
+    # Products and categories
+    path('', include("apps.goods.urls")),
 ]
