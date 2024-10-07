@@ -1,9 +1,10 @@
+from decimal import Decimal
 from django.contrib.auth import get_user_model
-from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 
 from ..base.services import path_photo_product
-from ..base.validators import validate_foto_size_product, validate_foto_logo_shop, validate_file_size_avatar
+from ..base.validators import validate_foto_size_product, validate_file_size_avatar
 from ..shops.models import Shop
 
 User = get_user_model()
@@ -46,6 +47,18 @@ class Product(models.Model):
         on_delete=models.PROTECT,
         verbose_name="Магазин",
         help_text="Укажите магазин, в котором продается продукт"
+    )
+    product_rating = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        default=Decimal('0.00'),
+        blank=True,
+        validators=[
+            MaxValueValidator(5.0),
+            MinValueValidator(0.0)
+        ],
+        verbose_name="Рейтинг",
+        help_text="Оценка от 0.00 до 5.00"
     )
 
     def __str__(self):
@@ -169,3 +182,50 @@ class ProposalNewCategory(models.Model):
     class Meta:
         verbose_name = "предложение"
         verbose_name_plural = "предложении"
+
+
+class ProductRating(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Пользователь",
+        help_text="Пользователь, оставивший оценку"
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        verbose_name="Магазин",
+        help_text="Магазин, который был оценен"
+    )
+    number_rating = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(5),
+            MinValueValidator(1)
+        ],
+        verbose_name="Оценка",
+        help_text="Оценка магазина от 1 до 5"
+    )
+    comment = models.CharField(
+        max_length=150,
+        null=True,
+        blank=True,
+        verbose_name="Комментарии для магазина"
+    )
+    date_writing = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата написания",
+        help_text="Дата и время написания отзыва"
+    )
+    update_to = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Дата обновления",
+        help_text="Дата и время последнего обновления отзыва"
+    )
+
+    def __str__(self):
+        return f"Пользователь: {self.user.username}\nМагазин: {self.shop.title}"
+
+    class Meta:
+        verbose_name = "рейтинг"
+        verbose_name_plural = "рейтинги"
+        unique_together = ('user', 'product')
