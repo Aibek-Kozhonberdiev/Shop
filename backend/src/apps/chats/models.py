@@ -56,7 +56,7 @@ class Chat(models.Model):
     def clean(self):
         if self.product_rating:
             if self.product_rating.shop.user != self.seller:
-                ValidationError("Только продавец может оставить сообщение об отзыве")
+                ValidationError("Только продавец может оставить сообщение об отзыве.")
         super().clean()
 
 
