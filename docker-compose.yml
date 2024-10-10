@@ -1,4 +1,4 @@
-version: '3'
+#version: '3'
 
 services:
   db:
@@ -35,6 +35,9 @@ services:
       - db
     env_file:
       - .env
+    profiles:
+      - all
+      - dev
 
   # web:
   #   container_name: web-react
@@ -43,6 +46,8 @@ services:
   #     - "3000:3000"
   #   restart: always
   #   command: npm start
+  #    profiles:
+  #      - all
 
 #  nginx:
 #    container_name: nginx
@@ -52,9 +57,11 @@ services:
 #    volumes:
 #      - static
 #      - media
-#    depends_on:
+#    depends_on:f
 #      - api
 #      - web
+#    profiles:
+#      - all
 
 volumes:
   postgres_data:

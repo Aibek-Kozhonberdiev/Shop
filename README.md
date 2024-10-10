@@ -2,5 +2,5 @@
 cp .env.example .env
 ```
 ```bash
-docker-compose up -d
+docker-compose --profile all up -d
 ```

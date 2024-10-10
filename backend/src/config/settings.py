@@ -5,7 +5,6 @@ from datetime import timedelta
 
 env = environ.Env(
     DEBUG=(bool, False),
-    IS_DB=(bool, True),
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,8 +14,6 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG')
-
-IS_DB = env('IS_DB')
 
 ALLOWED_HOSTS = ["*"]
 
@@ -37,13 +34,14 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'channels'
 
     # Apss
     'apps.chats.apps.ChatsConfig',
     'apps.goods.apps.GoodsConfig',
     'apps.shops.apps.ShopsConfig',
     'apps.users.apps.UsersConfig',
+
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -79,24 +77,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-if IS_DB:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env("POSTGRES_DB"),
-            'USER': env("POSTGRES_USER"),
-            'PASSWORD': env("POSTGRES_PASSWORD"),
-            'HOST': "db",
-            'PORT': '5432',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env("POSTGRES_DB"),
+        'USER': env("POSTGRES_USER"),
+        'PASSWORD': env("POSTGRES_PASSWORD"),
+        'HOST': env("DB_HOST"),
+        'PORT': '5432',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
