@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 
 
@@ -10,25 +11,21 @@ def validation_phone(value):
         )
 
 
-def validate_file_size_avatar(file):
-    max_size_mb = 0.5
-    if file.size > max_size_mb * 1024 * 1024:
-        raise ValidationError(f"Размер файла не должен превышать {max_size_mb}MB.")
+@deconstructible
+class FileSizeValidator:
+    message = _(
+        "Размер файла не должен превышать %(max_size_mb)MB."
+    )
 
+    def __init__(self, max_size_mb=1):
+        self.max_size_mb = max_size_mb
 
-def validate_foto_base(file):
-    max_size_mb = 3
-    if file.size > max_size_mb * 1024 * 1024:
-        raise ValidationError(f"Размер файла не должен превышать {max_size_mb}MB.")
+    def __call__(self, value):
+        if value.size > self.max_size_mb * 1024 * 1024:
+            raise ValidationError(self.message)
 
-
-def validate_foto_logo_shop(file):
-    max_size_mb = 1.5
-    if file.size > max_size_mb * 1024 * 1024:
-        raise ValidationError(f"Размер файла не должен превышать {max_size_mb}MB.")
-
-
-def validate_foto_size_product(file):
-    max_size_mb = 2
-    if file.size > max_size_mb * 1024 * 1024:
-        raise ValidationError(f"Размер файла не должен превышать {max_size_mb}MB.")
+    def __eq__(self, other):
+        return (
+            isinstance(other, self.__class__)
+            and self.max_size_mb == other.max_size_mb
+        )

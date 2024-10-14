@@ -5,7 +5,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
 
 from ..base.services import path_background_shop, path_logo_shop, path_screenshot_complaint
-from ..base.validators import validate_foto_base, validate_foto_logo_shop
+from ..base.validators import FileSizeValidator
 
 User = get_user_model()
 
@@ -32,7 +32,9 @@ class Shop(models.Model):
                     'png',
                 ]
             ),
-            validate_foto_logo_shop
+            FileSizeValidator(
+                max_size_mb=1
+            )
         ],
         verbose_name="Логотип",
         help_text="Загрузите логотип магазина"
@@ -46,7 +48,9 @@ class Shop(models.Model):
                     'png',
                 ]
             ),
-            validate_foto_base
+            FileSizeValidator(
+                max_size_mb=3
+            )
         ],
         null=True,
         blank=True,
@@ -142,7 +146,7 @@ class Complaint(models.Model):
                     'png',
                 ]
             ),
-            validate_foto_base
+            FileSizeValidator()
         ],
         null=True,
         blank=True,

@@ -4,6 +4,7 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 
 from ..base.services import path_image_message, path_file_message
+from ..base.validators import FileSizeValidator
 from ..goods.models import Product, ProductRating
 
 User = get_user_model()
@@ -13,6 +14,8 @@ class Chat(models.Model):
     product = models.ForeignKey(
         Product,
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         verbose_name="Продукт",
         help_text="Продукт, связанный с чатом"
     )
@@ -29,35 +32,18 @@ class Chat(models.Model):
         verbose_name="Дата создания",
         help_text="Дата и время создания чата"
     )
-    user = models.ForeignKey(
+    users = models.ManyToManyField(
         User,
-        on_delete=models.PROTECT,
         related_name="chats_sent",
-        verbose_name="Покупатель",
-        help_text="Обычный пользователь"
-    )
-    seller = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        related_name="chats_received",
-        verbose_name="Продавец",
-        help_text="Пользователь, который продает товар"
     )
 
     def __str__(self):
-        return f"Чат между {self.user.username} и {self.seller.username} о продукте {self.product.title}"
+        return f"Чат с пользователями: {', '.join(user.username for user in self.users.all())}"
 
     class Meta:
         verbose_name = "чат"
         verbose_name_plural = "чаты"
-        unique_together = ("user", "seller")
         ordering = ['-create_to']
-
-    def clean(self):
-        if self.product_rating:
-            if self.product_rating.shop.user != self.seller:
-                ValidationError("Только продавец может оставить сообщение об отзыве.")
-        super().clean()
 
 
 class Message(models.Model):
@@ -79,6 +65,7 @@ class Message(models.Model):
                     'png'
                 ]
             ),
+            FileSizeValidator()
         ],
         verbose_name="Изображение",
         help_text="Изображение в формате JPG или PNG"
@@ -95,6 +82,9 @@ class Message(models.Model):
                     'txt'
                 ]
             ),
+            FileSizeValidator(
+                max_size_mb=5
+            )
         ],
         verbose_name="Файл",
         help_text="Файл документа (DOCX, PDF, TXT)"
@@ -110,13 +100,6 @@ class Message(models.Model):
         related_name="messages_sent",
         verbose_name="Отправитель",
         help_text="Пользователь, отправивший сообщение"
-    )
-    sender = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        related_name="messages_received",
-        verbose_name="Получатель",
-        help_text="Пользователь, получивший сообщение"
     )
     is_read = models.BooleanField(
         default=False,

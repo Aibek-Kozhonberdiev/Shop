@@ -4,7 +4,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 from ..base.services import path_avatar_user
-from ..base.validators import validation_phone, validate_file_size_avatar
+from ..base.validators import validation_phone, FileSizeValidator
 
 
 class CustomUser(AbstractUser):
@@ -40,7 +40,9 @@ class CustomUser(AbstractUser):
                     'png',
                 ]
             ),
-            validate_file_size_avatar
+            FileSizeValidator(
+                max_size_mb=0.5
+            )
         ]
     )
 

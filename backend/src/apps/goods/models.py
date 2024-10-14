@@ -4,7 +4,7 @@ from django.core.validators import FileExtensionValidator, MaxValueValidator, Mi
 from django.db import models
 
 from ..base.services import path_photo_product
-from ..base.validators import validate_foto_size_product, validate_file_size_avatar
+from ..base.validators import FileSizeValidator
 from ..shops.models import Shop
 
 User = get_user_model()
@@ -79,7 +79,7 @@ class ProductFoto(models.Model):
                     'png',
                 ]
             ),
-            validate_foto_size_product
+            FileSizeValidator(max_size_mb=1.2)
         ],
         verbose_name="Фото продукта",
         help_text="Загрузите изображение продукта"
@@ -114,7 +114,7 @@ class Category(models.Model):
                 ],
                 message="Разрешен только формат PNG"
             ),
-            validate_file_size_avatar
+            FileSizeValidator()
         ],
         verbose_name = "Иконка",
         help_text = "Загрузите иконку в формате PNG. Размер файла не должен превышать установленный лимит 0.5MB."
@@ -149,7 +149,7 @@ class SubCategory(models.Model):
                 ],
                 message="Разрешен только формат PNG"
             ),
-            validate_file_size_avatar
+            FileSizeValidator()
         ],
         verbose_name = "Иконка",
         help_text = "Загрузите иконку в формате PNG. Размер файла не должен превышать установленный лимит 0.5MB."
