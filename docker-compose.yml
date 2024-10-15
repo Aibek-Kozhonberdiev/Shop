@@ -1,5 +1,8 @@
 version: '3'
 
+networks:
+  dev:
+
 services:
   db:
     container_name: db-postgres
@@ -13,6 +16,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     restart: always
+    networks:
+      dev:
 
   redis:
     container_name: redis
@@ -38,16 +43,20 @@ services:
     profiles:
       - all
       - dev
+    networks:
+      dev:
 
-  # web:
-  #   container_name: web-react
-  #   build: ./frontend
-  #   ports:
-  #     - "3000:3000"
-  #   restart: always
-  #   command: npm start
-  #    profiles:
-  #      - all
+#  web:
+#    container_name: web-react
+#    build: ./frontend
+#    ports:
+#     - "3000:3000"
+#    restart: always
+#    command: npm start
+#    profiles:
+#        - all
+#    networks:
+#      dev:
 
 #  nginx:
 #    container_name: nginx
