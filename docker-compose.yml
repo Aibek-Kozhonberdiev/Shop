@@ -1,5 +1,3 @@
-version: '3'
-
 networks:
   dev:
 
@@ -16,8 +14,6 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     restart: always
-    networks:
-      dev:
 
   redis:
     container_name: redis
