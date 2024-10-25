@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Third party libraries
+    "channels",
     'corsheaders',
     'rest_framework',
     'drf_yasg',
@@ -40,8 +40,6 @@ INSTALLED_APPS = [
     'apps.goods.apps.GoodsConfig',
     'apps.shops.apps.ShopsConfig',
     'apps.users.apps.UsersConfig',
-
-    'channels',
 ]
 
 MIDDLEWARE = [
