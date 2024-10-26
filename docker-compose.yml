@@ -1,5 +1,3 @@
-networks:
-  dev:
 
 services:
   db:
@@ -14,8 +12,6 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     restart: always
-    networks:
-      - dev
 
   redis:
     container_name: redis
@@ -30,8 +26,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - media:/code/media
-      - static:/code/static
+      - ./media:/code/media
+      - ./static:/code/static
     entrypoint: /code/wsgi-entrypoint.sh
     restart: always
     depends_on:
@@ -41,8 +37,6 @@ services:
     profiles:
       - all
       - dev
-    networks:
-      dev:
 
 #  web:
 #    container_name: web-react
@@ -56,18 +50,18 @@ services:
 #    networks:
 #      dev:
 
-#  nginx:
-#    container_name: nginx
-#    build: ./nginx
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - static
-#      - media
-#    profiles:
-#      - all
-#    networks:
-#      - dev
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+    volumes:
+      - ./media:/media
+      - ./static:/static
+    profiles:
+      - all
 
 volumes:
   postgres_data:
