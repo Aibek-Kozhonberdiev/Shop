@@ -39,7 +39,7 @@ services:
       - all
       - dev
 
-  celery:
+  celery: &default-celery
     <<: *default-django
     container_name: celery-django
     command: "celery -A config worker -l info"

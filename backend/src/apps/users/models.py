@@ -54,6 +54,10 @@ class CustomUser(AbstractUser):
         default=False,
         blank=True,
     )
+    key = models.BinaryField(
+        null=True,
+        blank=True
+    )
 
     objects = CustomUserManager()
 

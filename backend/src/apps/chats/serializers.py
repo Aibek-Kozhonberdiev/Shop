@@ -10,13 +10,15 @@ class SerializerUser(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fiends = [
+        fields = [
             "id",
             "username",
             "email",
             "phone",
             "avatar",
-            "is_staff"
+            "is_staff",
+            "email_confirmed",
+            "phone_confirmed",
         ]
 
 

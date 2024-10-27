@@ -4,6 +4,11 @@ from .models import Product, ProductFoto, Category, SubCategory
 
 
 class SerializerProduct(serializers.ModelSerializer):
+    product_rating = serializers.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        read_only=True
+    )
 
     class Meta:
         model = Product

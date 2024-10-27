@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
 from rest_framework import serializers
 
 from .models import Shop, Complaint, Rating
@@ -41,9 +40,7 @@ class SerializerShop(serializers.ModelSerializer):
     average_rating = serializers.DecimalField(
         max_digits=3,
         decimal_places=2,
-        validators=[
-            MinValueValidator(1.0)
-        ]
+        read_only=True
     )
 
     class Meta:
@@ -51,7 +48,7 @@ class SerializerShop(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, instance):
-        if instance.indicate_address == False:
+        if instance.indicate_address is not True:
             instance.address = None
 
         return super().to_representation(instance)

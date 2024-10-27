@@ -19,6 +19,12 @@ class ProductFotoViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, ]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return ProductFoto.objects.none()
+
+        if not hasattr(self.request.user, 'shop'):
+            raise SerializerProduct.ValidationError("The user does not have an associated store.")
+
         return ProductFoto.objects.filter(product__shop=self.request.user.shop)
 
 
