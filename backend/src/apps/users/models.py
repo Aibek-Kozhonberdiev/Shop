@@ -5,6 +5,7 @@ from django.utils.translation import gettext as _
 
 from ..base.services import path_avatar_user
 from ..base.validators import validation_phone, FileSizeValidator
+from .managers import CustomUserManager
 
 
 class CustomUser(AbstractUser):
@@ -45,6 +46,16 @@ class CustomUser(AbstractUser):
             )
         ]
     )
+    email_confirmed = models.BooleanField(
+        default=False,
+        blank=True
+    )
+    phone_confirmed = models.BooleanField(
+        default=False,
+        blank=True,
+    )
+
+    objects = CustomUserManager()
 
     REQUIRED_FIELDS = ['email', 'phone']
 

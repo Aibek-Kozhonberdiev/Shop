@@ -20,23 +20,33 @@ services:
       - "6379:6379"
     restart: always
 
-  api:
+  api: &default-django
     container_name: api-django
     build: ./backend
     ports:
       - "8000:8000"
     volumes:
-      - ./media:/code/media
-      - ./static:/code/static
+      - media:/code/media
+      - static:/code/static
     entrypoint: /code/wsgi-entrypoint.sh
     restart: always
     depends_on:
       - db
+      - redis
     env_file:
       - .env
     profiles:
       - all
       - dev
+
+  celery:
+    <<: *default-django
+    container_name: celery-django
+    command: "celery -A config worker -l info"
+    depends_on:
+      - api
+    entrypoint: []
+    ports: []
 
 #  web:
 #    container_name: web-react
@@ -55,11 +65,12 @@ services:
     build: ./nginx
     depends_on:
       - api
+#      - web
     ports:
       - "80:80"
     volumes:
-      - ./media:/media
-      - ./static:/static
+      - media:/media
+      - static:/static
     profiles:
       - all
 

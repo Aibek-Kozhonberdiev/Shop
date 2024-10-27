@@ -12,6 +12,12 @@ class SerializerSetUser(serializers.ModelSerializer):
     is_staff = serializers.BooleanField(
         read_only=True,
     )
+    email_confirmed = serializers.BooleanField(
+        read_only=True
+    )
+    phone_confirmed = serializers.BooleanField(
+        read_only=True
+    )
 
     class Meta:
         model = User
@@ -21,5 +27,7 @@ class SerializerSetUser(serializers.ModelSerializer):
             "email",
             "phone",
             "avatar",
-            "is_staff"
+            "is_staff",
+            "email_confirmed",
+            "phone_confirmed",
         ]
