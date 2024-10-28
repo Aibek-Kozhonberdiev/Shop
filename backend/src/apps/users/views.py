@@ -1,6 +1,6 @@
 import random
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.hashers import make_password
 from rest_framework.views import Response, APIView
 from rest_framework import mixins, viewsets, permissions
 from rest_framework_simplejwt.exceptions import TokenError
@@ -25,14 +25,9 @@ class UserRegister(APIView):
     permission_classes = [permissions.AllowAny, ]
 
     def post(self, request):
-        email = request.data.get('email')
-        password = request.data.get('password')
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return Response({'detail': 'Incorrect email address or password.'}, status=401)
-        if not check_password(password, user.password):
-            return Response({'detail': 'Incorrect email address or password.'}, status=401)
+        serializer = SerializerSetUser(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
         refresh = RefreshToken.for_user(user)
         user_data = {
             'user': SerializerSetUser(user).data,
@@ -70,7 +65,10 @@ class UserConfirmation(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
 
     def generate_key(self):
-        return random.randint(10000, 99999)
+        key = ''
+        for _ in range(1, 10):
+            key += random.randint(0, 9)
+        return key
 
     def send_email_key(self, user):
         key = self.generate_key()
@@ -79,20 +77,22 @@ class UserConfirmation(APIView):
         email = user.email
         send_key.delay(email, key)
 
-    def get(self, request, send):
+    def get(self, request):
         user = self.request.user
-        if send == "email":
+        if request.query_params['email'] == "email":
             self.send_email_key(user)
             return Response({'detail': "The key has been sent to your email."}, status=201)
         else:
             return Response({'detail': "Sending a confirmation code to the number is not possible yet."}, status=300)
 
-    def post(self, request, send):
+    def post(self, request):
         user = self.request.user
         key = request.data.get('key')
         if user.key == make_password(key):
-            if send == "email":
-                user.email = True
+            if request.query_params['send'] == "email":
+                user.email_confirmed = True
+            elif request.query_params['send'] == "phone":
+                user.phone_confirmed = True
             user.save()
-            return Response({'detail': f'{send.title()} was successfully verified.'}, status=201)
+            return Response({'detail': f'{request.query_params["email"].title()} was successfully verified.'}, status=201)
         return Response({'detail': 'Invalid key.'}, status=500)

@@ -19,6 +19,8 @@ services:
     ports:
       - "6379:6379"
     restart: always
+    profiles:
+      - all
 
   api: &default-django
     container_name: api-django
