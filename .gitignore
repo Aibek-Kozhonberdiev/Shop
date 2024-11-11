@@ -14,4 +14,6 @@ dump.rdb
 .vscode
 
 ### Config ###
+.env.dev
+.env.db
 .env
