@@ -23,7 +23,7 @@ class CustomUser(AbstractUser):
     email_confirmed = models.BooleanField(default=False, blank=True)
     phone_confirmed = models.BooleanField(default=False, blank=True)
     key = models.BinaryField(null=True, blank=True)
-    key_valid = models.BooleanField(default=False)
+    key_data = models.DateTimeField(null=True, blank=True)
 
     objects = CustomUserManager()
 

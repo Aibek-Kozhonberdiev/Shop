@@ -1,4 +1,5 @@
-import time
+import http.client
+import json
 from django.conf import settings
 from django.core.mail import send_mail
 
@@ -6,7 +7,7 @@ from config.celery import app
 
 
 @app.task
-def send_key(user_email, key):
+def send_key_email(user_email, key):
     send_mail(
         "test",
         f"test: {key}",
@@ -16,7 +17,19 @@ def send_key(user_email, key):
     )
 
 @app.task
-def time_valid_key(user):
-    time.sleep(90)
-    user.key_valid = False
-    user.save()
+def send_phone(number, text, term):
+    conn = http.client.HTTPSConnection("web.it-decision.com")
+    headers = {
+        'Authorization': settings.PHONE_KEY,
+        'Content-Type': 'application/json'
+    }
+    payload = json.dumps({
+    "phone": number,
+    "sender": settings.NAME_SHOP,
+    "text": text,
+    "validity_period": term
+    })
+    conn.request("POST", "/v1/api/send-sms", payload, headers)
+    res = conn.getresponse()
+    data = res.read()
+    return data.decode("uft-8")
