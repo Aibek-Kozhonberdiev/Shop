@@ -12,8 +12,10 @@ def check_google_token(google_user):
     except ValueError:
         raise AuthenticationFailed(code=403, detail='Bad token Google.')
 
-    user = User.objects.get_or_create(
+    user, is_created = User.objects.get_or_create(
         email=google_user['email'],
-        username=google_user['username']
     )
+    if is_created:
+        user.username = google_user['username']
+        user.save()
     return user

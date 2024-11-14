@@ -4,7 +4,7 @@ from django.urls import path
 from .endpoint import views, auth_views, key_views
 
 router = DefaultRouter()
-router.register(r'users', views.UserSetView.as_view(), basename='user')
+router.register(r'users', views.UserSetView, basename='user')
 
 urlpatterns = [
     path('registration', auth_views.UserRegister.as_view({'post': 'post'})),

@@ -17,4 +17,4 @@ dump.rdb
 .env.dev
 .env.db
 .env
-client_secret_*.apps.googleusercontent.com.json
+*.apps.googleusercontent.com.json
