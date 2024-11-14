@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import mixins, viewsets
 
-from ..serializers import SerializerSetUser
+from ..serializers import SetUserSerializer
 
 User = get_user_model()
 
@@ -11,5 +11,5 @@ class UserSetView(mixins.ListModelMixin,
                   mixins.UpdateModelMixin,
                   mixins.DestroyModelMixin,
                   viewsets.GenericViewSet):
-    serializer_class = SerializerSetUser
+    serializer_class = SetUserSerializer
     queryset = User.objects.all()

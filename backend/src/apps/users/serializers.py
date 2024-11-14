@@ -4,7 +4,7 @@ from rest_framework import serializers
 User = get_user_model()
 
 
-class SerializerSetUser(serializers.ModelSerializer):
+class SetUserSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(required=False, allow_null=True)
     is_staff = serializers.BooleanField(read_only=True)
     is_active = serializers.BooleanField(read_only=True)
@@ -24,3 +24,9 @@ class SerializerSetUser(serializers.ModelSerializer):
             "email_confirmed",
             "phone_confirmed",
         ]
+
+
+class GoogleSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    token = serializers.CharField()
+    username = serializers.CharField()

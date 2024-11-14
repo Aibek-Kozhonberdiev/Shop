@@ -14,6 +14,9 @@ urlpatterns = [
 
     path('check_email', key_views.EmailConfirmation.as_view({'get': 'get'})),
     path('key_email', key_views.EmailConfirmation.as_view({'post': 'post'})),
+
+    path('check_phone', key_views.PhoneConfirmation.as_view({'get': 'get'})),
+    path('key_phone', key_views.PhoneConfirmation.as_view({'post': 'post'})),
 ]
 
 urlpatterns += router.urls
