@@ -15,7 +15,7 @@ class Product(models.Model):
         max_length=3, decimal_places=2, default=Decimal("0.00"), blank=True,
         validators=[MaxValueValidator(5.0), MinValueValidator(0.0)]
     )
-    create_to = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     sub_category = models.ForeignKey("SubCategory", on_delete=models.PROTECT)
     shop = models.OneToOneField(Shop, on_delete=models.CASCADE)
 

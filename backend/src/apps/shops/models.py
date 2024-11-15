@@ -29,7 +29,7 @@ class Shop(models.Model):
     indicate_address = models.BooleanField(default=True, blank=True)
     number_of_complaints = models.PositiveIntegerField(default=0, blank=True)
     link = models.URLField(null=True, blank=True)
-    create_to = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     rating = models.DecimalField(
         default=Decimal('0.00'), max_length=3, decimal_places=2,
         validators=[

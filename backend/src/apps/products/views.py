@@ -7,7 +7,7 @@ from .serializers import ProductSerializer, FotoProductSerializer, SubCategorySe
 
 
 class ProductSetView(viewsets.ModelViewSet):
-    queryset = Product.objects.all().order_by('create_to', 'rating')
+    queryset = Product.objects.all().order_by('created_at', 'rating')
     serializer_class = ProductSerializer
     filter_backends = [filters.SearchFilter, rest_framework.DjangoFilterBackend]
     search_fields = ['title', 'rating', 'create_to', 'price', 'category']

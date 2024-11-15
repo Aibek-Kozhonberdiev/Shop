@@ -11,7 +11,7 @@ class FotoProductSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    create_to = serializers.DateTimeField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
     rating = serializers.DecimalField(read_only=True, max_digits=3, decimal_places=2)
     photos = FotoProductSerializer(read_only=True, many=True)
 
