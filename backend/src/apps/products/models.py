@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator, FileExt
 from django.db import models
 
 from ..base.services import FileSizeValidator, path_photo_product
+from ..shops.models import Shop
 
 
 class Product(models.Model):
@@ -15,7 +16,8 @@ class Product(models.Model):
         validators=[MaxValueValidator(5.0), MinValueValidator(0.0)]
     )
     create_to = models.DateTimeField(auto_now_add=True)
-    sab_category = models.ForeignKey("SubCategory", on_delete=models.PROTECT)
+    sub_category = models.ForeignKey("SubCategory", on_delete=models.PROTECT)
+    shop = models.OneToOneField(Shop, on_delete=models.CASCADE)
 
 
 class FotoProduct(models.Model):

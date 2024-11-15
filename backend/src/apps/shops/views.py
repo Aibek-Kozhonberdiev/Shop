@@ -12,3 +12,6 @@ class ShopSetView(ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     filter_backends = [filters.SearchFilter, rest_framework.DjangoFilterBackend]
     search_fields = ['title', 'rating', 'create_to']
+
+    def get_queryset(self):
+        return Shop.objects.filter(user__is_active=True)

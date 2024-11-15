@@ -12,6 +12,9 @@ class ProductSetView(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, rest_framework.DjangoFilterBackend]
     search_fields = ['title', 'rating', 'create_to', 'price', 'category']
 
+    def get_queryset(self):
+        return Product.objects.filter(shop__user__is_active=True)
+
 
 class FotoProductSetView(mixins.CreateModelMixin,
                          mixins.ListModelMixin,
