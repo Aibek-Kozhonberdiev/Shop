@@ -15,6 +15,9 @@ class RatingShop(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ('user', 'shop')
+
 
 class RatingProduct(models.Model):
     rating = models.PositiveSmallIntegerField(validators=[MaxValueValidator(5), MinValueValidator(1)])
@@ -22,3 +25,6 @@ class RatingProduct(models.Model):
     updated_to = models.DateTimeField(auto_now=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'shop')
