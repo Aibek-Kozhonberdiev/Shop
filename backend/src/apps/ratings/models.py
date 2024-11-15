@@ -12,6 +12,7 @@ class RatingShop(models.Model):
     rating = models.PositiveSmallIntegerField(validators=[MaxValueValidator(5), MinValueValidator(1)])
     created_to = models.DateTimeField(auto_now_add=True)
     updated_to = models.DateTimeField(auto_now=True)
+    comment = models.TextField(max_length=500)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -23,8 +24,14 @@ class RatingProduct(models.Model):
     rating = models.PositiveSmallIntegerField(validators=[MaxValueValidator(5), MinValueValidator(1)])
     created_to = models.DateTimeField(auto_now_add=True)
     updated_to = models.DateTimeField(auto_now=True)
+    comment = models.TextField(max_length=500)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('user', 'shop')
+
+
+class FotoRatingProduct(models.Model):
+    foto = models.ImageField()
+    rating = models.ForeignKey(RatingProduct, on_delete=models.CASCADE)
