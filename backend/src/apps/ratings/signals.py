@@ -7,7 +7,7 @@ from .models import RatingShop, RatingProduct
 
 
 def update_rating(model_instance, related_model, rating_field):
-    ratings = related_model.objects.filter(**{rating_field: model_instance})
+    ratings = related_model.objects.get(**{rating_field: model_instance})
     total = sum(item.number_rating for item in ratings)
     count = ratings.count()
 
