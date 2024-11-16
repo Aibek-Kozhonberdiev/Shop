@@ -1,7 +1,7 @@
 from rest_framework import mixins, viewsets, permissions
 
-from .models import Complain, SupportMessage
-from .serializers import ComplainSerializer, SupportMessageSerializer
+from .models import Complain, Support
+from .serializers import ComplainSerializer, SupportSerializer
 
 
 class ComplainView(mixins.CreateModelMixin,
@@ -11,10 +11,10 @@ class ComplainView(mixins.CreateModelMixin,
     permission_classes = [permissions.IsAuthenticated]
 
 
-class SupportMessageView(mixins.CreateModelMixin,
-                         mixins.ListModelMixin,
-                         mixins.DestroyModelMixin,
-                         viewsets.GenericViewSet):
-    queryset = SupportMessage.objects.all()
-    serializer_class = SupportMessageSerializer
+class SupportView(mixins.CreateModelMixin,
+                  mixins.ListModelMixin,
+                  mixins.DestroyModelMixin,
+                  viewsets.GenericViewSet):
+    queryset = Support.objects.all()
+    serializer_class = SupportSerializer
     permission_classes = [permissions.IsAuthenticated]

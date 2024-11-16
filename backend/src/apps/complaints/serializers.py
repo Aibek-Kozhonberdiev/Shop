@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Complain, SupportMessage
+from .models import Complain, Support
 
 
 class ComplainSerializer(serializers.ModelSerializer):
@@ -10,8 +10,8 @@ class ComplainSerializer(serializers.ModelSerializer):
         finds = "__all__"
 
 
-class SupportMessageSerializer(serializers.ModelSerializer):
+class SupportSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = SupportMessage
+        model = Support
         finds = "__all__"

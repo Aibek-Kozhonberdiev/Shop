@@ -13,7 +13,7 @@ class Complain(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
 
 
-class SupportMessage(models.Model):
+class Support(models.Model):
     title = models.CharField()
     text = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
