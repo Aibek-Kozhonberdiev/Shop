@@ -36,10 +36,12 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     # Apss
-    # 'apps.chats.apps.ChatsConfig',
-    # 'apps.goods.apps.GoodsConfig',
-    # 'apps.shops.apps.ShopsConfig',
     'apps.users.apps.UsersConfig',
+    'apps.shops.apps.ShopsConfig',
+    'apps.ratings.apps.RatingsConfig',
+    'apps.products.apps.ProductsConfig',
+    'apps.complaints.apps.ComplaintsConfig',
+    'apps.chats.apps.ChatsConfig',
 ]
 
 MIDDLEWARE = [

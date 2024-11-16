@@ -10,8 +10,8 @@ django.setup()
 from apps.complaints import routing
 
 application = ProtocolTypeRouter({
-  "http": get_asgi_application(),
-  "websocket": AuthMiddlewareStack(
+    "http": get_asgi_application(),
+    "websocket": AuthMiddlewareStack(
         URLRouter(
             routing.ws_urlpatterns
         )
