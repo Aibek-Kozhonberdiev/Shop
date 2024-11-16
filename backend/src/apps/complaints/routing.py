@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .consumer import SupportConsumer
+from .consumer import ComplaintConsumer
 
 ws_urlpatterns = [
-    path('ws/consumer/', SupportConsumer.as_asgi())
+    path('ws/complaint/', ComplaintConsumer.as_asgi())
 ]

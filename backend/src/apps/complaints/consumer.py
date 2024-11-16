@@ -2,7 +2,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 
-class SupportConsumer(AsyncWebsocketConsumer):
+class ComplaintConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']
         self.group = "admin"
@@ -22,6 +22,4 @@ class SupportConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'order_id': event['order_id'],
             'status': event['status'],
-            'title': event['title'],
-            'user': event['user'],
         }))
