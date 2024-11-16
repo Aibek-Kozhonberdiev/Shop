@@ -4,12 +4,12 @@ from rest_framework import permissions
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
-from ..serializers import SetUserSerializer, GoogleSerializer
+from ..serializers import UserSerializer, GoogleSerializer
 from ..services.google import check_google_token
 
 
 class UserRegister(GenericAPIView):
-    serializer_class = SetUserSerializer
+    serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny, ]
 
     def post(self, request):
@@ -29,12 +29,12 @@ class UserAuthOrLogout(GenericAPIView):
     permission_classes = [permissions.AllowAny, ]
 
     def post(self, request):
-        serializer = SetUserSerializer(data=request.data, context={'request': request})
+        serializer = UserSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         refresh = RefreshToken.for_user(user)
         user_data = {
-            'user': SetUserSerializer(user).data,
+            'user': UserSerializer(user).data,
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }
@@ -59,7 +59,7 @@ class UserAuthGoogle(GenericAPIView):
             user = check_google_token(data)
             refresh = RefreshToken.for_user(user)
             user_data = {
-                'user': SetUserSerializer(user).data,
+                'user': UserSerializer(user).data,
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
             }

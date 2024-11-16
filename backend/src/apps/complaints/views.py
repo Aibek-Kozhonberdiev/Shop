@@ -18,3 +18,11 @@ class SupportView(mixins.CreateModelMixin,
     queryset = Support.objects.all()
     serializer_class = SupportSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class SupportListView(mixins.ListModelMixin,
+                      mixins.RetrieveModelMixin,
+                      viewsets.GenericViewSet):
+    queryset = Support.objects.all()
+    serializer_class = SupportSerializer
+    permission_classes = [permissions.IsAdminUser]
