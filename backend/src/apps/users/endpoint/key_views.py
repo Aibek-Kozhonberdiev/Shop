@@ -1,11 +1,11 @@
-from rest_framework.views import APIView, Response
-from rest_framework import permissions
+from rest_framework.views import Response
+from rest_framework import permissions, viewsets
 
 from ..tasks import send_key_email, send_phone
 from ..services.key_generate import KeyGenerate
 
 
-class EmailConfirmation(APIView, KeyGenerate):
+class EmailConfirmation(viewsets.GenericViewSet, KeyGenerate):
     permission_classes = [permissions.IsAuthenticated, ]
     send_type = 'email'
 

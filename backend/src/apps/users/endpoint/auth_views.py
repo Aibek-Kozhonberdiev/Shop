@@ -1,6 +1,5 @@
 from rest_framework.views import Response
-from rest_framework.generics import GenericAPIView
-from rest_framework import permissions
+from rest_framework import permissions, viewsets
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
@@ -8,7 +7,7 @@ from ..serializers import UserSerializer, GoogleSerializer
 from ..services.google import check_google_token
 
 
-class UserRegister(GenericAPIView):
+class UserRegister(viewsets.GenericViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny, ]
 
@@ -25,7 +24,7 @@ class UserRegister(GenericAPIView):
         return Response(user_data, status=201)
 
 
-class UserAuthOrLogout(GenericAPIView):
+class UserAuthOrLogout(viewsets.GenericViewSet):
     permission_classes = [permissions.AllowAny, ]
 
     def post(self, request):
@@ -49,7 +48,7 @@ class UserAuthOrLogout(GenericAPIView):
             return Response({'detail': 'The token is invalid.'}, status=401)
 
 
-class UserAuthGoogle(GenericAPIView):
+class UserAuthGoogle(viewsets.GenericViewSet):
     serializer_class = GoogleSerializer
     permission_classes = [permissions.AllowAny, ]
 

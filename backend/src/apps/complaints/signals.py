@@ -33,5 +33,5 @@ def add_complain_shop(sender, instance, *args, **kwargs):
 
 @receiver(post_save, sender=Support)
 @receiver(post_delete, sender=Support)
-def send_delete_support_ws(sender, instance):
+def send_delete_support_ws(sender, instance, **kwargs):
     send_status_admin(instance)

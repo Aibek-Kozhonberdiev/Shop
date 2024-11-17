@@ -7,7 +7,7 @@ router = DefaultRouter()
 router.register(r'users', views.UserSetView, basename='user')
 
 urlpatterns = [
-    path('registration', auth_views.UserRegister.as_view({'post': 'post'})),
+    path('registration', auth_views.UserRegister.as_view({'post': 'create'})),
 
     path('auth', auth_views.UserAuthOrLogout.as_view({'post': 'post'})),
     path('logout', auth_views.UserAuthOrLogout.as_view({'delete': 'delete'})),
