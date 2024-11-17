@@ -25,11 +25,10 @@ class FotoProductSetView(mixins.CreateModelMixin,
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return FotoProduct.objects.filter(product__shop=self.request.user)
+        return FotoProduct.objects.filter(product__shop__user=self.request.user)
 
 
 class SubCategorySetView(viewsets.ReadOnlyModelViewSet):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
     permission_classes = [permissions.AllowAny]
-    pagination_class = None

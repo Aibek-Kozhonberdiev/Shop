@@ -30,4 +30,4 @@ class FotoRatingView(mixins.CreateModelMixin,
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return FotoRatingProduct.objects.filter(rating__user__id=self.request.user)
+        return FotoRatingProduct.objects.filter(rating__user__id=self.request.user.id)

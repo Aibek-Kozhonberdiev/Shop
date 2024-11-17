@@ -9,7 +9,7 @@ from ..services.google import check_google_token
 
 class UserRegister(viewsets.GenericViewSet):
     serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny, ]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -25,15 +25,16 @@ class UserRegister(viewsets.GenericViewSet):
 
 
 class UserAuthOrLogout(viewsets.GenericViewSet):
-    permission_classes = [permissions.AllowAny, ]
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data, context={'request': request})
+        serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         refresh = RefreshToken.for_user(user)
         user_data = {
-            'user': UserSerializer(user).data,
+            'user': self.serializer_class(user).data,
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }
@@ -50,7 +51,7 @@ class UserAuthOrLogout(viewsets.GenericViewSet):
 
 class UserAuthGoogle(viewsets.GenericViewSet):
     serializer_class = GoogleSerializer
-    permission_classes = [permissions.AllowAny, ]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         data = self.serializer_class(data=request.data)
