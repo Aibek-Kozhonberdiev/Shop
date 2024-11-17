@@ -7,20 +7,16 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - .env.db
     restart: always
 
   redis:
     container_name: redis
-    image: redis:latest
+    image: redis:7.4.1-alpine
     ports:
       - "6379:6379"
     restart: always
-    profiles:
-      - all
 
   api: &default-django
     container_name: api-django
@@ -36,7 +32,7 @@ services:
       - db
       - redis
     env_file:
-      - .env
+      - .env.dev
     profiles:
       - all
       - dev
@@ -59,8 +55,6 @@ services:
 #    command: npm start
 #    profiles:
 #        - all
-#    networks:
-#      dev:
 
   nginx:
     container_name: nginx

@@ -1,46 +1,25 @@
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from .models import Chat, Message
-
-User = get_user_model()
-
-
-class SerializerUser(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = [
-            "id",
-            "username",
-            "email",
-            "phone",
-            "avatar",
-            "is_staff",
-            "email_confirmed",
-            "phone_confirmed",
-        ]
+from ..users.serializers import UserSerializer
 
 
-class SerializerMessage(serializers.ModelSerializer):
-    user = SerializerUser(
-        read_only=True
-    )
-    create_to = serializers.DateTimeField(
-        read_only=True
-    )
+class MessageSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField(read_only=True)
+    is_read = serializers.BooleanField(read_only=True)
+
 
     class Meta:
         model = Message
-        fiends = "__all__"
+        fields = "__all__"
 
 
-class SerializerChat(serializers.ModelSerializer):
-    messages = SerializerMessage(
-        many=True,
-        read_only=True
-    )
+class ChatSerializer(serializers.ModelSerializer):
+    user_data = UserSerializer(read_only=True, many=True, source='users')
+    messages = MessageSerializer(many=True, read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Chat
-        fiends = '__all__'
+        fields = "__all__"

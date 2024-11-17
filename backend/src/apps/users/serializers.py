@@ -1,23 +1,22 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
 User = get_user_model()
 
 
-class SerializerSetUser(serializers.ModelSerializer):
-    avatar = serializers.ImageField(
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True,
         required=False,
-        allow_null=True
+        allow_null=False,
+        validators=[validate_password]
     )
-    is_staff = serializers.BooleanField(
-        read_only=True,
-    )
-    email_confirmed = serializers.BooleanField(
-        read_only=True
-    )
-    phone_confirmed = serializers.BooleanField(
-        read_only=True
-    )
+    avatar = serializers.ImageField(required=False, allow_null=True)
+    is_staff = serializers.BooleanField(read_only=True)
+    is_active = serializers.BooleanField(read_only=True)
+    email_confirmed = serializers.BooleanField(read_only=True)
+    phone_confirmed = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = User
@@ -25,9 +24,17 @@ class SerializerSetUser(serializers.ModelSerializer):
             "id",
             "username",
             "email",
+            "password",
             "phone",
             "avatar",
             "is_staff",
+            "is_active",
             "email_confirmed",
             "phone_confirmed",
         ]
+
+
+class GoogleSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    token = serializers.CharField()
+    username = serializers.CharField()

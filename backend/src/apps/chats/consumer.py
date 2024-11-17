@@ -1,59 +1,76 @@
 import json
-from django.contrib.auth import get_user_model
-from rest_framework import permissions
 from channels.db import database_sync_to_async
-from djangochannelsrestframework.observer.generics import ObserverModelInstanceMixin, GenericAsyncAPIConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer, AsyncJsonWebsocketConsumer
 
-from .models import Chat, Message
-from .serializers import SerializerChat, SerializerMessage
-
-User = get_user_model()
+from .models import Chat
+from .serializers import MessageSerializer
 
 
-class ChatConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
-    queryset = Chat.objects.all()
-    serializer_class = SerializerChat
-    permission_classes = [permissions.IsAuthenticated, ]
-    lookup_field = 'pk'
-
+class MessageConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
-        await self.accept()
-        response = await self.get_catches()
-        await self.send_json(response)
+        user = self.scope['user']
+        self.chat_id = self.scope['url_route']['kwargs']['chat_id']
+        chat_is = await self.check_chat(self.chat_id)
+        if user.is_authenticated and chat_is:
+            await self.channel_layer.group_add(self.chat_id, self.channel_name)
+            await self.accept()
+        else:
+            await self.send_json(content={'detail': "Not fount."})
+            await self.close()
+
+    async def disconnect(self, code):
+        await self.channel_layer.group_discard(
+            self.chat_id,
+            self.channel_name
+        )
 
     async def receive_json(self, content, **kwargs):
-        message_type = content.get('type')
-        if message_type == 'send_message':
-            await self.handle_send_message(content)
-        elif message_type == 'create_chat':
-            await self.handle_send_message(content)
+        content = json.dumps(content)
+        message = await self.get_message(content)
+        await self.channel_layer.group_send(
+            f"chat_{self.chat_id}",
+            {
+                "type": "chat_message",
+                "message": message
+            }
+        )
 
-    async def handle_send_message(self, content):
-        serializer = SerializerMessage(data=json.loads(content.get('message')))
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return await self.channel_layer.group_send(
-                f"chat_{content.get('message', {}).get('chat_id')}",
-                {
-                    "type": "chat_message",
-                    "message": serializer.data,
-                }
-            )
-        await self.send_json(serializer.errors)
-
-    async def handle_create_chat(self, content):
-        response = await self.create_now_chat(content)
-        await self.send_json(response)
+    async def send_message(self, event):
+        message = event['message']
+        await self.send_json(content=message)
 
     @database_sync_to_async
-    def create_now_chat(self, content):
-        serializer = SerializerChat(json.loads(content.get('data')))
+    async def check_chat(self, chat_id):
+        try:
+            return Chat.objects.get(pk=chat_id)
+        except Chat.DoesNotExist:
+            return False
+
+    @database_sync_to_async
+    async def get_message(self, content):
+        serializer = MessageSerializer(content)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return serializer.data
-        return serializer.errors
+        else:
+            return serializer.errors
 
-    @database_sync_to_async
-    def get_catches(self):
-        chats = Chat.objects.filter(users=self.scope['user'])
-        return SerializerChat(chats, many=True).data
+
+class NotificationConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.user = self.scope['user']
+        if self.user.is_authenticated:
+            await self.channel_layer.group_add(f"user_{self.user.id}", self.channel_name)
+            await self.accept()
+        else:
+            await self.close()
+
+    async def disconnect(self, code):
+        await self.channel_layer.group_discard(
+            f"user_{self.user.id}",
+            self.channel_name
+        )
+
+    async def order_status(self, event):
+        message = event['massage']
+        await self.send(text_data=json.loads(message))

@@ -1,11 +1,9 @@
 from rest_framework.routers import DefaultRouter
 
-from .views import ShopViewSet, ComplaintView, RatingView
+from .views import ShopSetView
 
 router = DefaultRouter()
-router.register(r"shop", ShopViewSet, basename='shop')
-router.register(r"complaint", ComplaintView, basename='complaint')
-router.register(r"rating", RatingView, basename='rating')
+router.register(r'shops', ShopSetView, basename='shop')
 
 urlpatterns = [
 

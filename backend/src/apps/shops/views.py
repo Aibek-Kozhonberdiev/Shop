@@ -1,33 +1,17 @@
-from django.contrib.auth import get_user_model
-from rest_framework import mixins, viewsets, permissions
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import permissions, filters
+from django_filters import rest_framework
 
-from .models import Shop, Complaint, Rating
-from .serializers import SerializerShop, SerializerComplaint, SerializerRating
-
-User = get_user_model()
-
-
-class ShopViewSet(viewsets.ModelViewSet):
-    queryset = Shop.objects.all()
-    serializer_class = SerializerShop
+from .models import Shop
+from .serializers import ShopSerializer
 
 
-class ComplaintView(viewsets.ModelViewSet):
-    """
-    Отображает жалобы только от пользователя, отправившего запрос.
-    """
-    queryset = Complaint.objects.all()
-    serializer_class = SerializerComplaint
-    permission_classes = [permissions.IsAuthenticated, ]
+class ShopSetView(ModelViewSet):
+    queryset = Shop.objects.all().order_by('created_at', 'rating')
+    serializer_class = ShopSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
+    filter_backends = [filters.SearchFilter, rest_framework.DjangoFilterBackend]
+    search_fields = ['title', 'rating', 'created_at']
 
     def get_queryset(self):
-        return Complaint.objects.filter(user=self.request.user)
-
-
-class RatingView(mixins.CreateModelMixin,
-                 mixins.RetrieveModelMixin,
-                 mixins.UpdateModelMixin,
-                 mixins.DestroyModelMixin,
-                 viewsets.GenericViewSet):
-    queryset = Rating.objects.all()
-    serializer_class = SerializerRating
+        return Shop.objects.filter(user__is_active=True)

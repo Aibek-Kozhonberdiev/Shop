@@ -1,0 +1,33 @@
+from rest_framework import mixins, viewsets, permissions
+
+from .models import RatingShop, RatingProduct, FotoRatingProduct
+from .serializers import RatingShopSerializer, RatingProductSerializer, FotoRatingProductSerializer
+
+
+class RatingShopView(mixins.CreateModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin,
+                     viewsets.GenericViewSet):
+    queryset = RatingShop.objects.all()
+    serializer_class = RatingShopSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class RatingProductView(mixins.CreateModelMixin,
+                        mixins.UpdateModelMixin,
+                        mixins.DestroyModelMixin,
+                        viewsets.GenericViewSet):
+    queryset = RatingProduct.objects.all()
+    serializer_class = RatingProductSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class FotoRatingView(mixins.CreateModelMixin,
+                     mixins.DestroyModelMixin,
+                     viewsets.GenericViewSet):
+    queryset = FotoRatingProduct.objects.all()
+    serializer_class = FotoRatingProductSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return FotoRatingProduct.objects.filter(rating__user__id=self.request.user)
