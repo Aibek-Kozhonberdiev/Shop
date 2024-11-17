@@ -9,14 +9,14 @@ class RatingShopSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RatingShop
-        fints = "__all__"
+        fields = "__all__"
 
 
 class FotoRatingProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FotoRatingProduct
-        fints = "__all__"
+        fields = "__all__"
 
 
 class RatingProductSerializer(serializers.ModelSerializer):
@@ -26,4 +26,4 @@ class RatingProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RatingProduct
-        fints = "__all__"
+        fields = "__all__"

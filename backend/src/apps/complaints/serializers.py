@@ -7,11 +7,11 @@ class ComplainSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Complain
-        finds = "__all__"
+        fields = "__all__"
 
 
 class SupportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Support
-        finds = "__all__"
+        fields = "__all__"
