@@ -12,11 +12,11 @@ urlpatterns = [
     path('auth', auth_views.UserAuthOrLogout.as_view({'post': 'post'})),
     path('logout', auth_views.UserAuthOrLogout.as_view({'delete': 'delete'})),
 
-    path('check_email', key_views.EmailConfirmation.as_view()),
-    path('key_email', key_views.EmailConfirmation.as_view()),
+    path('check_email', key_views.EmailConfirmation.as_view({'get': 'get'})),
+    path('key_email', key_views.EmailConfirmation.as_view({'post': 'post'})),
 
-    path('check_phone', key_views.PhoneConfirmation.as_view()),
-    path('key_phone', key_views.PhoneConfirmation.as_view()),
+    path('check_phone', key_views.PhoneConfirmation.as_view({'get': 'get'})),
+    path('key_phone', key_views.PhoneConfirmation.as_view({'post': 'post'})),
 ]
 
 urlpatterns += router.urls
