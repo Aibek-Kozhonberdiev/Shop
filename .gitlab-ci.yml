@@ -30,6 +30,6 @@ deploy-prod:
     - main
   script:
     - echo $DJANGO_ENV_FILE
-    - cp $DJANGO_ENV_FILE .env.db
-    - cp $POSTGRES_ENV_FILE .env.dev
+    - echo $DJANGO_ENV_FILE > .env.db
+    - echo $POSTGRES_ENV_FILE > .env.dev
     - docker compose --profile all up -d --build
