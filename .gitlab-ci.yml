@@ -26,8 +26,6 @@ test-api-1:
 deploy-prod:
   stage: deploy
   environment: production
-  needs:
-    - test-api-1
   only:
     - main
   script:
