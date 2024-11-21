@@ -6,8 +6,9 @@ stages:
 build-all:
   stage: build
   script:
-    - docker-compose --profile all down
-    - docker-compose --profile all build
+#    - docker compose --profile all down
+#    - docker compose --profile all build
+    - echo $whoami
 
 test-api-1:
   stage: test
@@ -22,4 +23,4 @@ deploy-prod:
   only:
     - main
   script:
-    - docker-compose --profile all up -d --build
+    - docker compose --profile all up -d --build
