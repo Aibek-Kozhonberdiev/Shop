@@ -26,13 +26,9 @@ test-api-1:
 deploy-prod:
   stage: deploy
   environment: production
-  variables:
-    DJANGO_ENV_FILE: ".env.dev"
-    POSTGRES_ENV_FILE: ".env.db"
   only:
     - main
   script:
-    - uname; pwd; neofetch
     - cp $DJANGO_ENV_FILE .env.db
     - cp $POSTGRES_ENV_FILE .env.dev
     - docker compose --profile all up -d --build
