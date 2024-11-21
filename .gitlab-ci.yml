@@ -6,9 +6,10 @@ stages:
 build-all:
   stage: build
   script:
-#    - docker compose --profile all down
-#    - docker compose --profile all build
-    - echo $whoami
+    - cp .env.example .env.db
+    - cp .env.example .env.dev
+    - docker compose --profile all down
+    - docker compose --profile all build
 
 test-api-1:
   stage: test
