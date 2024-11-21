@@ -18,7 +18,7 @@ test-api-1:
     - build-all
   stage: test
   script:
-    - sleep 20
+    - sleep 1
     - echo "Test"
   only:
     - merge_requests
@@ -26,9 +26,13 @@ test-api-1:
 deploy-prod:
   stage: deploy
   environment: production
+  variables:
+    DJANGO_ENV_FILE: ".env.dev"
+    POSTGRES_ENV_FILE: ".env.db"
   only:
     - main
   script:
+    - echo "DJANGO_ENV_FILE: $DJANGO_ENV_FILE"
     - cp $DJANGO_ENV_FILE .env.db
     - cp $POSTGRES_ENV_FILE .env.dev
     - docker compose --profile all up -d --build
