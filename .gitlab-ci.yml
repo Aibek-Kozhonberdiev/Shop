@@ -12,6 +12,7 @@ build-all:
 test-api-1:
   stage: test
   script:
+    - sleep 20
     - echo "Test"
   only:
     - merge_requests
