@@ -10,8 +10,12 @@ build-all:
     - cp .env.example .env.dev
     - docker compose --profile all down
     - docker compose --profile all build
+  only:
+    - merge_requests
 
 test-api-1:
+  needs:
+    - build-all
   stage: test
   script:
     - sleep 20
@@ -21,9 +25,12 @@ test-api-1:
 
 deploy-prod:
   stage: deploy
+  environment: production
+  needs:
+    - test-api-1
   only:
     - main
   script:
-    - cp .env.example .env.db
-    - cp .env.example .env.dev
+    - cp ${DJANGO_ENV_FILE} .env.db
+    - cp ${POSTGRES_ENV_FILE} .env.dev
     - docker compose --profile all up -d --build
