@@ -24,4 +24,6 @@ deploy-prod:
   only:
     - main
   script:
+    - cp .env.example .env.db
+    - cp .env.example .env.dev
     - docker compose --profile all up -d --build
