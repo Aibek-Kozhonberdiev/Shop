@@ -5,5 +5,5 @@ WORKDIR app
 COPY . .
 
 RUN apk update &&\
-    apk install nodejs npm &&\
+    apk install --no-cache nodejs npm &&\
     npm install
