@@ -13,23 +13,12 @@ build-all:
   only:
     - merge_requests
 
-test-api-1:
-  needs:
-    - build-all
-  stage: test
-  script:
-    - sleep 1
-    - echo "Test"
-  only:
-    - merge_requests
-
 deploy-prod:
   stage: deploy
   environment: production
   only:
     - main
   script:
-    - echo $DJANGO_ENV_FILE
     - cp $DJANGO_ENV_FILE .env.dev
     - cp $POSTGRES_ENV_FILE .env.db
     - docker compose --profile all up -d --build
