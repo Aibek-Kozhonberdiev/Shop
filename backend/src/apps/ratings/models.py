@@ -29,7 +29,7 @@ class RatingProduct(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('user', 'shop')
+        unique_together = ('user', 'product')
 
 
 class FotoRatingProduct(models.Model):

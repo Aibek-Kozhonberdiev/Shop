@@ -4,26 +4,32 @@ from django.contrib.auth.hashers import make_password
 
 
 class KeyGenerate:
+    def __init__(self, size=10):
+        self.size = size
+
     def key_generate(self):
         key = ''
-        for _ in range(1, 10):
+        for _ in range(1, self.size):
             key += random.randint(0, 9)
         return key
 
-    def key_save(self, user):
-        key = self.key_generate()
+
+class KeySave:
+    @staticmethod
+    def key_save(user, key):
         user.key = make_password(key)
         user.key_data = datetime.datetime.now()
         user.key_valid = True
         user.save()
-        return key
 
-    def key_data_check(self, user):
+    @staticmethod
+    def key_data_check(user):
         if (datetime.datetime.now() - user.key_data) < datetime.timedelta(minutes=5):
             return True
         return False
 
-    def key_check(self, user, key):
+    @staticmethod
+    def key_check(user, key):
         if key == make_password(user.key):
             return True
         return False

@@ -1,16 +1,20 @@
-from rest_framework.views import APIView, Response
-from rest_framework import permissions
+from rest_framework.views import Response
+from rest_framework import permissions, viewsets
 
 from ..tasks import send_key_email, send_phone
-from ..services.key_generate import KeyGenerate
+from ..services.key_generate import KeyGenerate, KeySave
 
 
-class EmailConfirmation(APIView, KeyGenerate):
-    permission_classes = [permissions.IsAuthenticated, ]
+class EmailConfirmation(viewsets.GenericViewSet):
+    key_class = KeyGenerate
+    save_key_class = KeySave
+    serializer_class = None
+    permission_classes = [permissions.IsAuthenticated]
     send_type = 'email'
 
     def send_key(self, user):
-        key = self.key_save(user)
+        key = self.key_class.key_generate()
+        self.save_key_class.key_save(user, key)
         send_key_email.delay(user.email, key)
 
     def get(self):
@@ -24,9 +28,9 @@ class EmailConfirmation(APIView, KeyGenerate):
     def post(self, request):
         user = self.request.user
         key = request.data.get('key')
-        if not self.key_data_check(user):
+        if not self.save_key_class.key_data_check(user):
             return Response({'detail': 'Time expired to confirm key.'}, status=401)
-        if self.key_check(user, key):
+        if self.save_key_class.key_check(user, key):
             user.email_confirmed = True
             user.save()
             return Response({'detail': 'Key was successfully verified.'}, status=201)
@@ -34,8 +38,10 @@ class EmailConfirmation(APIView, KeyGenerate):
 
 
 class PhoneConfirmation(EmailConfirmation):
+    key_class = KeyGenerate(size=4)
     send_type = 'phone'
 
     def send_key(self, user):
-        key = self.key_save(user)
+        key = self.key_class.key_generate()
+        self.save_key_class.key_save(user, key)
         send_phone.delay(user.phone, key, 5)

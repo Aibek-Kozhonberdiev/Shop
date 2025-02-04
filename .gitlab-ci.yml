@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+  - deploy
+
+build-all:
+  stage: build
+  script:
+    - cp .env.example .env.db
+    - cp .env.example .env.dev
+    - docker compose --profile all down
+    - docker compose --profile all build
+  only:
+    - merge_requests
+
+deploy-prod:
+  stage: deploy
+  environment: production
+  only:
+    - main
+  script:
+    - cp $DJANGO_ENV_FILE .env.dev
+    - cp $POSTGRES_ENV_FILE .env.db
+    - docker compose --profile all up -d --build

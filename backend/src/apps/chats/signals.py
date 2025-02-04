@@ -8,7 +8,7 @@ from .models import Chat, Message
 
 @receiver(post_save, sender=Chat)
 @receiver(post_delete, sender=Chat)
-def send_notification_chat_user(sender, instance):
+def send_notification_chat_user(sender, instance, **kwargs):
     channel_layer = get_channel_layer()
     users = instance.users
     for user in users:
@@ -24,7 +24,7 @@ def send_notification_chat_user(sender, instance):
 
 @receiver(post_save, sender=Message)
 @receiver(post_delete, sender=Message)
-def send_notification_message_user(sender, instance):
+def send_notification_message_user(sender, instance, **kwargs):
     channel_layer = get_channel_layer()
     chat = Chat.objects.get(pk=instance.chat)
     for user in chat.users:

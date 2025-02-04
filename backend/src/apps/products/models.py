@@ -12,7 +12,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField()
     currency = models.CharField()
     rating = models.DecimalField(
-        max_length=3, decimal_places=2, default=Decimal("0.00"), blank=True,
+        max_digits=3, decimal_places=2, default=Decimal("0.00"), blank=True,
         validators=[MaxValueValidator(5.0), MinValueValidator(0.0)]
     )
     created_at = models.DateTimeField(auto_now_add=True)

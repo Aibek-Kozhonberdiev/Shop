@@ -31,7 +31,7 @@ class Shop(models.Model):
     link = models.URLField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     rating = models.DecimalField(
-        default=Decimal('0.00'), max_length=3, decimal_places=2,
+        default=Decimal('0.00'), max_digits=3, decimal_places=2,
         validators=[
             MaxValueValidator(5.0),
             MinValueValidator(1.0)

@@ -8,9 +8,9 @@ class ChatView(mixins.RetrieveModelMixin,
                mixins.ListModelMixin,
                mixins.CreateModelMixin,
                viewsets.GenericViewSet):
-    queryset = Chat.objects.all().oreder_by('created_at', 'updated_at')
+    queryset = Chat.objects.all().order_by('created_at', 'updated_at')
     serializer_class = ChatSerializer
-    pagination_class = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Chat.objects.filter(users=self.request.user)

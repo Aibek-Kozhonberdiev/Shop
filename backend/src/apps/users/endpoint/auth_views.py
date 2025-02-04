@@ -1,6 +1,5 @@
 from rest_framework.views import Response
-from rest_framework.generics import GenericAPIView
-from rest_framework import permissions
+from rest_framework import permissions, viewsets
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
@@ -8,9 +7,9 @@ from ..serializers import UserSerializer, GoogleSerializer
 from ..services.google import check_google_token
 
 
-class UserRegister(GenericAPIView):
+class UserRegister(viewsets.GenericViewSet):
     serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny, ]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -25,16 +24,17 @@ class UserRegister(GenericAPIView):
         return Response(user_data, status=201)
 
 
-class UserAuthOrLogout(GenericAPIView):
-    permission_classes = [permissions.AllowAny, ]
+class UserAuthOrLogout(viewsets.GenericViewSet):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data, context={'request': request})
+        serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         refresh = RefreshToken.for_user(user)
         user_data = {
-            'user': UserSerializer(user).data,
+            'user': self.serializer_class(user).data,
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }
@@ -49,9 +49,9 @@ class UserAuthOrLogout(GenericAPIView):
             return Response({'detail': 'The token is invalid.'}, status=401)
 
 
-class UserAuthGoogle(GenericAPIView):
+class UserAuthGoogle(viewsets.GenericViewSet):
     serializer_class = GoogleSerializer
-    permission_classes = [permissions.AllowAny, ]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         data = self.serializer_class(data=request.data)
